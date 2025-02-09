@@ -2,8 +2,8 @@
 ### For microservice purpose
 ## Step installation and run your server 
 1. Setup virtual environment
-    ```shel
-    python -m venv venv
+    ```shell
+    python3 -m venv venv
     ```
 2. Use virtual environment
     ```shell
