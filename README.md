@@ -15,7 +15,7 @@
    ```
 4. Run http app
     ```shell
-    python run.py http
+    python3 run.py http
     ```
    
 ## Migrations
