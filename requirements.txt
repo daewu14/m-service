@@ -6,3 +6,4 @@ python-dotenv==1.0.1
 pymysql
 cryptography
 alembic
+json_log_formatter
