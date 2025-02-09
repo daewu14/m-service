@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, Blueprint
-from src.ucase.hello_world import HelloWorldCase
+from app.ucase.hello_world import HelloWorldCase
 from pkg.app.ucase import serve
 
 app = Flask(__name__)

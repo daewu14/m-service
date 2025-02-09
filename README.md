@@ -13,7 +13,7 @@
    ```shell
    pip install -r requirements.txt
    ```
-4. Run flask
+4. Run http app
     ```shell
-    flask run
+    python run.py http
     ```
