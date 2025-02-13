@@ -1,6 +1,7 @@
 import http
 from abc import abstractmethod
-from flask import jsonify, request, session
+from flask import request, session, Response
+from pkg.http.response import Response as HttpResponse
 
 """
 This module defines the UCase class and the serve function for handling
@@ -16,18 +17,23 @@ Usage:
     request handling logic. Use the serve function to execute the
     serve method of the subclass.
 """
+
+
 class UCase:
-    
+
     def __init__(self):
+        self.http_status = http.HTTPStatus
         self.request = request
         self.session = session
-        self.response = jsonify
 
+    @classmethod
+    def response(cls, status: http.HTTPStatus = http.HTTPStatus.OK, message: str = "SUCCESS", data: dict = None, meta: dict = None):
+        return HttpResponse(data=data, status=status, message=message, meta=meta).build()
 
     @abstractmethod
-    def serve(self): 
+    def serve(self) -> Response:
         pass
-    
+
 
 def serve(case=UCase):
     return case().serve()

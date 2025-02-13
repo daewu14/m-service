@@ -1,19 +1,9 @@
+from pkg.logger.log import _nameToLevel
 import logging
 import os
 from logging import Logger
 from dotenv import load_dotenv, find_dotenv
-from pkg.logger.formater import CustomJsonFormatter
-
-_nameToLevel = {
-    'CRITICAL': logging.CRITICAL,
-    'FATAL': logging.FATAL,
-    'ERROR': logging.ERROR,
-    'WARN': logging.WARNING,
-    'WARNING': logging.WARNING,
-    'INFO': logging.INFO,
-    'DEBUG': logging.DEBUG,
-    'NOTSET': logging.NOTSET,
-}
+from pkg.logger.formater import CustomFlaskFormatter
 
 _log = None
 
@@ -36,7 +26,12 @@ def _init():
         print("Error load env on log.py : ", e)
         exit(0)
 
-    _logger = logging.getLogger(os.environ.get('APP_NAME', 'flask-service'))
+    # Disabled flask default logger
+    _logger = logging.getLogger('werkzeug')
+    _logger.handlers.clear()
+    _logger.propagate = False
+    _logger.disabled = True
+    return _logger
 
     # Setup log level
     log_level_env = os.environ.get("LOG_LEVEL", "ERROR")
@@ -55,7 +50,7 @@ def _init():
     console_handler.setLevel(log_level)
 
     # Create formatters and add them to handlers
-    json_format = CustomJsonFormatter()
+    json_format = CustomFlaskFormatter()
 
     console_handler.setFormatter(json_format)
 

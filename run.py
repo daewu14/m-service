@@ -1,8 +1,5 @@
-import argparse
-
 import cmd
-from routes.api import app
-import os
+
 from dotenv import load_dotenv, find_dotenv
 
 if __name__ == '__main__':
