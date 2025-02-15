@@ -1,35 +1,27 @@
-from flask import jsonify, Response as FlaskResponse
-import http
-from collections import OrderedDict
+from fastapi import Response
 import json
+import http
+
+http_status = http.HTTPStatus
 
 
-class Response:
+def response(status: http_status = http_status.OK,
+             message: str = "SUCCESS",
+             data: dict = None,
+             meta: dict | str = None):
+    map = {
+        "status": status.name,
+        "message": message,
+    }
 
-    def __init__(self,
-                 status: http.HTTPStatus = http.HTTPStatus.OK,
-                 message: str = "SUCCESS",
-                 data: dict = None,
-                 meta: dict = None):
-        self.status = status
-        self.message = message
-        self.data = data
-        self.meta = meta
+    if data is not None:
+        map["data"] = data
 
-    def build(self):
-        res = [
-            ('status', self.status.name),
-            ('message', self.message),
-        ]
+    if meta is not None:
+        map["meta"] = meta
 
-        if self.data is not None:
-            res.append(('data', self.data))
-
-        if self.meta is not None:
-            res.append(('meta', self.meta))
-
-        return FlaskResponse(
-            json.dumps(OrderedDict(res), sort_keys=False),
-            status=self.status,
-            mimetype='application/json'
-        )
+    return Response(
+        status_code=status,
+        media_type="application/json",
+        content=json.dumps(map),
+    )

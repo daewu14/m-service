@@ -1,0 +1,1 @@
+from app.repositories.user import UserRepository as user_repository

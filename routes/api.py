@@ -1,8 +1,11 @@
-from flask import Flask
-from app.ucase.hello_world import HelloWorldCase
-from pkg.app.ucase import serve
+from fastapi import FastAPI, Response, status
+import app.ucase.user.detail
 
-app = Flask(__name__)
-apiV1 = "/api/v1"
-@app.route("/api/v1/", methods=['GET'])
-def home(): return serve(HelloWorldCase)
+api = FastAPI()
+
+
+@api.get("/api/v1/user/{user_id}")
+async def user(user_id: int):
+    return await app.ucase.user.detail.user_by_id(
+        user_id=user_id
+    )

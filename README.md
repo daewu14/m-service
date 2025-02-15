@@ -1,4 +1,4 @@
-# Flask Service
+# M-Service
 ### For microservice purpose
 ## Step installation and run your server 
 1. Setup virtual environment
