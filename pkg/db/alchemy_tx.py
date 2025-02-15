@@ -22,7 +22,6 @@ class AlchemyTx:
             try:
                 result = await session.execute(query, arguments)
                 data = result.fetchone()
-                logger.info("fetchone", extra={"result": data, "query": query, "arguments": arguments})
                 return data
             except Exception as e:
                 raise e
