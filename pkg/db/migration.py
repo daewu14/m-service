@@ -14,6 +14,7 @@ _create_table_sql = """
 CREATE TABLE IF NOT EXISTS dw_migrations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     ts_migrate BIGINT NULL,
+    migration varchar(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 """
@@ -72,8 +73,12 @@ async def execute_migration(timestamp, sql: str, migration_file: str) -> int:
                 await close()
                 return 0
 
+            mig = migration_file.replace(".py -> up", "")
+            mig = mig.replace(".py -> down", "")
+            mig = mig.replace("migrations/", "")
+
             await session.execute(text(sql))
-            await session.execute(text(f"insert into dw_migrations (ts_migrate) values ({timestamp})"))
+            await session.execute(text(f"insert into dw_migrations (ts_migrate, migration) values ({timestamp},'{mig}')"))
             await session.commit()
             await close()
             print(f"Success execute migration {migration_file}")

@@ -14,7 +14,7 @@ class MigrationsCommand(AbstractCommand):
 
     def sub(self, parser: argparse.ArgumentParser):
         parser.add_argument("--create", type=str, help="Create new migration")
-        parser.add_argument("--migrate", help="Run migrations up")
+        parser.add_argument("--migrate", help="Run migrations up/down")
 
     def run(self, parser: argparse.ArgumentParser):
         db_check.DBCheck().run(parser)
