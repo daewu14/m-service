@@ -1,7 +1,6 @@
 import app.ucase.user as user_case
 from pkg.logger.log import logger
 from pkg.http import response, http_status
-import json
 
 response_docs = {
     200: {
@@ -48,7 +47,6 @@ async def user_by_id(user_id: int):
         if usr != "password":
             data_map[usr] = f"{user[0][usr]}"
 
-    # user = json.loads(f"{user[0]}")
     return response(
         status=http_status.OK,
         message="User Found",
