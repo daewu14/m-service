@@ -10,6 +10,9 @@ class Config:
         self.host = host
         self.port = port
 
+    def is_configured(self):
+        return self.dbname is not None and self.user is not None and self.host is not None and self.port is not None
+
 
 def read() -> Config:
     return Config(
@@ -33,9 +36,9 @@ def write() -> Config:
 
 def migration() -> Config:
     return Config(
-        dbname=os.getenv("DB_MIGRATION_NAME", "flask_srvc"),
-        user=os.getenv("DB_MIGRATION_USER", "root"),
-        password=os.getenv("DB_MIGRATION_PASSWORD", "password"),
-        host=os.getenv("DB_MIGRATION_HOST", "localhost"),
-        port=os.getenv("DB_MIGRATION_PORT", '3306')
+        dbname=os.getenv("DB_MIGRATION_NAME"),
+        user=os.getenv("DB_MIGRATION_USER"),
+        password=os.getenv("DB_MIGRATION_PASSWORD"),
+        host=os.getenv("DB_MIGRATION_HOST"),
+        port=os.getenv("DB_MIGRATION_PORT")
     )

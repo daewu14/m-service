@@ -18,7 +18,6 @@ except Exception as e:
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 alchemy = Alchemy()
-alchemy.close()
 config = context.config
 
 config.set_main_option('sqlalchemy.url', alchemy.engine_migration().str_url)

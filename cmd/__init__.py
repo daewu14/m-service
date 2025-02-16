@@ -1,10 +1,12 @@
 import argparse
-from cmd import http, migrations
+from cmd import http, migrations, db_check
+
 
 def run():
     cmd_action = {
         'http': http.run,
         'migrations': migrations.run,
+        'db_check': db_check.run,
     }
 
     parser = argparse.ArgumentParser()
