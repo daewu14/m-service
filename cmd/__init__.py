@@ -2,21 +2,28 @@ import argparse
 from cmd import http, migrations, db_check
 
 
+class _m_parser:
+    name: str
+
+
 def run():
-    cmd_action = {
-        'http': http.run,
-        'migrations': migrations.run,
-        'db_check': db_check.run,
-    }
+    cmd_action = [
+        http.HttpCommand,
+        db_check.DBCheck,
+        migrations.MigrationsCommand,
+    ]
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="list available command : "+", ".join(cmd_action.keys()))
+    parser = argparse.ArgumentParser(description="M-Service CLI tools")
+
+    # Add subparsers for different commands
+    subparsers = parser.add_subparsers(dest="command", required=False, help="Available subcommands")
+    for action in cmd_action:
+        action = action()
+        subparser = subparsers.add_parser(action.name, help=action.help, description=action.description)
+        action.sub(subparser)
+
     args = parser.parse_args()
-
-    command = cmd_action.get(args.command, None)
-
-    if command is None:
-        print("Command not found, list available command :\n - "+"\n - ".join(cmd_action.keys()))
-        exit(0)
-
-    command()
+    for action in cmd_action:
+        action = action()
+        if action.name == args.command:
+            action.run(parser=parser)

@@ -18,9 +18,12 @@ class Alchemy:
             return f"sqlite:///{config.dbname}"
 
         def mysql():
+            mysqldriver = "aiomysql"
+            if use_async is False:
+                mysqldriver = "pymysql"
             if config.password is None:
-                return f"mysql+aiomysql://{config.user}@{config.host}:{config.port}/{config.dbname}"
-            return f"mysql+aiomysql://{config.user}:{config.password}@{config.host}:{config.port}/{config.dbname}"
+                return f"mysql+{mysqldriver}://{config.user}@{config.host}:{config.port}/{config.dbname}"
+            return f"mysql+{mysqldriver}://{config.user}:{config.password}@{config.host}:{config.port}/{config.dbname}"
 
         def postgresql():
             return f"postgresql://{config.user}:{config.password}@{config.host}:{config.port}/{config.dbname}"

@@ -2,7 +2,7 @@ fastapi[standard]
 python-dotenv==1.0.1
 uvicorn
 aiomysql
+pymysql
 cryptography
-alembic
 json_log_formatter
 greenlet

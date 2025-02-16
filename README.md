@@ -19,15 +19,17 @@
     ```
    
 ## Migrations
-#### Used alembic for migration
-See the documentation https://alembic.sqlalchemy.org/en/latest
 ### Common tools usage 
 1. ##### Generate migration, example :
     ```shel
-    alembic revision -m "Create table users"
+    python3 run.py migration --create="create table users"
     ```
-   You will got new file like this `834aca5b7697_create_table_users.py`
-2. ##### Run migration
+   You will got new file like this `migrations/1739724108_321825_create_table_users.py`
+2. ##### Run migration up
     ```shel
-    alembic upgrade head
+    python3 run.py migration --migrate=up
+    ```
+3. ##### Run migration down
+    ```shel
+    python3 run.py migration --migrate=down
     ```

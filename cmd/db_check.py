@@ -1,11 +1,19 @@
+from cmd.abstract import AbstractCommand, argparse
 import asyncio
 
 from pkg.db import check_connection
 from pkg.logger.log import logger
 
 
-def run():
-    asyncio.run(_async_run())
+class DBCheck(AbstractCommand):
+
+    name = 'db_check'
+    description = 'Check DB'
+    help = 'Check DB'
+
+    def run(self, parser: argparse.ArgumentParser):
+        asyncio.run(_async_run())
+
 
 async def _async_run():
     check = await check_connection()
