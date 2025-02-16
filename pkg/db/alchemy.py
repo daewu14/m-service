@@ -79,16 +79,16 @@ class Alchemy:
     @classmethod
     async def check_connection(cls) -> ConnectionStatus:
         enginess = cls._engines()
-        status = False
+        status = True
         messages = []
         if len(enginess) == 0 :
+            status = False
             return ConnectionStatus(is_connect=status, is_no_db_configured=True, message="No db configured")
 
         for key, connection in enginess.items():
             try:
                 async with connection.async_engine.connect() as conn:
-                    await conn.execute(text("select 1"))
-                    status = True
+                    (await conn.execute(text("select 1"))).fetchone()
                     messages.append(f"DB {key} Connected")
                     await conn.close()
                 await connection.async_engine.dispose()
