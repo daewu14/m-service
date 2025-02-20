@@ -1,8 +1,9 @@
-from fastapi import Response
+from fastapi import Response, requests
 import json
 import http
 
 http_status = http.HTTPStatus
+request = requests.Request
 
 
 def response(status: http_status = http_status.OK,

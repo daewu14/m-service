@@ -34,8 +34,8 @@ response_docs = {
     },
 }
 
-
-async def user_by_id(user_id: int):
+# Get user by id
+async def detail(user_id: int):
     user = await user_case.user_repository.find_by_id(user_id)
 
     if user is None or len(user) == 0:

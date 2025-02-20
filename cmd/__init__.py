@@ -1,9 +1,5 @@
 import argparse
-from cmd import http, migrations, db_check
-
-
-class _m_parser:
-    name: str
+from cmd import http, migrations, db_check, ucase
 
 
 def run():
@@ -11,6 +7,7 @@ def run():
         http.HttpCommand,
         db_check.DBCheck,
         migrations.MigrationsCommand,
+        ucase.UCase
     ]
 
     parser = argparse.ArgumentParser(description="M-Service CLI tools")

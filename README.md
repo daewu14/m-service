@@ -17,7 +17,32 @@
     ```shell
     python3 run.py http
     ```
-   
+
+## UCase
+### Tools usage
+1. ##### Generate new ucase
+    ```shell
+    python3 run.py ucase new
+    ```
+    - ```
+       Folder new ucase : {new-ucase-folder-name}
+      ```
+    - ```
+       New UCase name (on app/ucase/package) : {new-ucase-name}
+      ```
+    **Result :** Success create new ucase package with 1 ucase
+1. ##### Generate existing ucase folder
+    ```shell
+    python3 run.py ucase update
+    ```
+    - ```
+       Folder existing ucase : {existing-ucase-folder-name}
+      ```
+    - ```
+       New UCase name (on app/ucase/package) : {new-ucase-name}
+      ```
+    **Result :** Success create new ucase package with 1 ucase
+
 ## Migrations
 ### Common tools usage 
 1. ##### Generate migration, example :
