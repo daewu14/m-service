@@ -7,8 +7,12 @@ import asyncio
 from pkg.logger.log import logger
 
 alchemy = Alchemy()
-db_migration = alchemy.engine_migration()
-async_session_migration = sessionmaker(db_migration.async_engine, expire_on_commit=False, class_=AsyncSession)
+db_migration = None
+async_session_migration = None
+check = asyncio.run(alchemy.check_connection())
+if not check.is_no_db_configured:
+    db_migration = alchemy.engine_migration()
+    async_session_migration = sessionmaker(db_migration.async_engine, expire_on_commit=False, class_=AsyncSession)
 
 _create_table_sql = """
 CREATE TABLE IF NOT EXISTS dw_migrations (
@@ -78,7 +82,8 @@ async def execute_migration(timestamp, sql: str, migration_file: str) -> int:
             mig = mig.replace("migrations/", "")
 
             await session.execute(text(sql))
-            await session.execute(text(f"insert into dw_migrations (ts_migrate, migration) values ({timestamp},'{mig}')"))
+            await session.execute(
+                text(f"insert into dw_migrations (ts_migrate, migration) values ({timestamp},'{mig}')"))
             await session.commit()
             await close()
             print(f"Success execute migration {migration_file}")
