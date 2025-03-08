@@ -1,6 +1,6 @@
-import app.ucase.${ucase_folder} as case
+import app.ucase.package as case
 from pkg.logger.log import logger
-from pkg.http import response, http_status
+from pkg.http import response, http_status, request
 
 # For swagger documentation
 response_docs = {
@@ -29,9 +29,11 @@ response_docs = {
 }
 
 
-# ${description}
-async def ${ucase_name}():
+# For get detail package
+async def detai():
+    # example of getting user_id value from request
+    # user_id = request.get("user_id")
     return response(
         status=http_status.OK,
-        message="Loaded"
+        message="User Found"
     )

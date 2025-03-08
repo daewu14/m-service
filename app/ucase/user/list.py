@@ -1,6 +1,6 @@
-import app.ucase.${ucase_folder} as case
+import app.ucase.user as case
 from pkg.logger.log import logger
-from pkg.http import response, http_status
+from pkg.http import response, http_status, request
 
 # For swagger documentation
 response_docs = {
@@ -29,9 +29,12 @@ response_docs = {
 }
 
 
-# ${description}
-async def ${ucase_name}():
+# List of user with pagination
+async def list(page: int):
     return response(
         status=http_status.OK,
-        message="Loaded"
+        message="User Found",
+        data={
+            "page": page,
+        }
     )

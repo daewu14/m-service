@@ -6,9 +6,14 @@
     python3 -m venv venv
     ```
 2. Use virtual environment
-    ```shell
-    source venv/bin/activate
-    ```
+   - Linux/Mac
+      ```shell
+       source venv/bin/activate
+      ```
+   - Windows
+      ```bash
+      venv\Scripts\activate.bat
+      ```
 3. Install requirements
    ```shell
    pip install -r requirements.txt

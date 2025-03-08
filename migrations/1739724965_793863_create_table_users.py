@@ -12,6 +12,7 @@ create table users
 (
     id         int auto_increment,
     uuid       varchar(128)            null,
+    name       varchar(128)            null,
     email      varchar(128)            null,
     password   varchar(255)            null,
     created_at timestamp default now() not null,

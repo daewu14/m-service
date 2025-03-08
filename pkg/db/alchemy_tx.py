@@ -42,8 +42,13 @@ class AlchemyTx:
             try:
                 async with session.begin():
                     session.add(model)
-                    await session.commit()
-                    return model.id
+
+                await session.commit()
+                await session.refresh(model)
+                detached_model = model.__dict__.copy()  # Create a standalone copy
+                await session.close()
+                return detached_model
             except Exception as e:
-                session.rollback()
+                await session.rollback()
+                await session.close()
                 raise e

@@ -1,5 +1,6 @@
 import glob
 import os
+import runpy
 
 from pkg.logger.log import logger
 
@@ -13,14 +14,11 @@ def read_get_variables(folder_path):
     py_files = glob.glob(os.path.join(folder_path, '*.py'))
 
     for py_file in py_files:
-        # Prepare a dictionary to store variables from this specific file
         file_variables = {}
-
-        # Open and execute the file in the current context
-        with open(py_file, 'r') as file:
-            code = file.read()
-            # Use exec() to execute the Python file's code in the file_variables context
-            exec(code, {}, file_variables)
+        result = runpy.run_path(py_file)
+        # List all variables and their values in the result dictionary
+        for var_name, var_value in result.items():
+            file_variables[var_name] = var_value
 
         # Add the extracted variables to the main variables dictionary
         variables[py_file] = file_variables
