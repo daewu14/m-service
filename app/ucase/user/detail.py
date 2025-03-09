@@ -1,4 +1,7 @@
+import json
+
 import app.ucase.user as user_case
+from app.presentation.response_user_detail import ResponseUserDetail
 from pkg.logger.log import logger
 from pkg.http import response, http_status
 
@@ -36,19 +39,19 @@ response_docs = {
 
 # Get user by id
 async def detail(user_id: int):
-    user = await user_case.user_repository.find_by_id(user_id)
+    try:
+        user = await user_case.user_repository.find_by_id(user_id)
 
-    if user is None or len(user) == 0:
-        return response(status=http_status.NOT_FOUND, message="User Not Found")
+        if user is None:
+            return response(status=http_status.NOT_FOUND, message="User Not Found")
 
-    logger.info("user-detail", extra={"user-detail": user[0]})
-    data_map = {}
-    for usr in user[0]:
-        if usr != "password":
-            data_map[usr] = f"{user[0][usr]}"
+        logger.info("user-detail", extra={"user-detail": f"{user.id}"})
 
-    return response(
-        status=http_status.OK,
-        message="User Found",
-        data=data_map
-    )
+        return response(
+            status=http_status.OK,
+            message="User Found",
+            data=json.loads(ResponseUserDetail.from_orm(user).json())
+        )
+    except Exception as e:
+        logger.error("user-detail", extra={"error": str(e)})
+        return response(status=http_status.INTERNAL_SERVER_ERROR, message="Internal Server Error")

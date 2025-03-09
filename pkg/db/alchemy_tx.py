@@ -1,38 +1,38 @@
 from pkg.db.alchemy import Alchemy
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import text
 from sqlalchemy.orm import sessionmaker
 
+from pkg.db.alchemy_stmt import AlchemyStmt
 from pkg.logger.log import logger
 
 alchemy = Alchemy()
 db_read = alchemy.engine_read()
 db_write = alchemy.engine_write()
 sql_text = text
-async_session_read = sessionmaker(db_read.async_engine, expire_on_commit=False, class_=AsyncSession)
-async_session_write = sessionmaker(db_write.async_engine, expire_on_commit=False, class_=AsyncSession)
 
 
 class AlchemyTx:
 
+    def __init__(self):
+        self.stmt = AlchemyStmt()
+
     @classmethod
-    async def fetchone(cls, query: select, arguments: dict = {}):
+    async def fetchone(cls, stmt: select):
         async with AsyncSession(db_read.async_engine) as session:
             try:
-                result = await session.execute(query, arguments)
-                data = result.fetchone()
+                result = await session.execute(stmt)
+                data = result.scalar_one_or_none()
                 return data
             except Exception as e:
                 raise e
 
     @classmethod
-    async def fetchall(cls, query: select, arguments: dict = {}):
+    async def fetchall(cls, stmt: select):
         async with AsyncSession(db_read.async_engine) as session:
             try:
-                result = await session.execute(query, arguments)
-                rows = result.fetchall()
-                return [dict(row._mapping) for row in rows] if rows else []
+                result = await session.execute(stmt)
+                return result.scalars().all()
             except Exception as e:
                 raise e
 
@@ -52,3 +52,29 @@ class AlchemyTx:
                 await session.rollback()
                 await session.close()
                 raise e
+
+    @classmethod
+    async def execute(cls, stmt):
+        async with AsyncSession(db_write.async_engine) as session:
+            try:
+                result = await session.execute(stmt)
+                await session.commit()
+                await session.close()
+                return result
+            except Exception as e:
+                await session.rollback()
+                await session.close()
+                raise e
+
+    @classmethod
+    def get_session(cls, write_engine: bool = True) -> AsyncSession:
+        """
+        Get session for read or write
+        :param write_engine:
+        :return: AsyncSession
+        """
+        session_write = sessionmaker(db_write.async_engine, expire_on_commit=False, class_=AsyncSession)
+        session_read = sessionmaker(db_read.async_engine, expire_on_commit=False, class_=AsyncSession)
+        if write_engine:
+            return session_write()
+        return session_read()

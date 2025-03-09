@@ -8,6 +8,7 @@ class Connection:
         self.str_url = str_url
         self.async_engine = async_engine
 
+
 class ConnectionStatus:
 
     def __init__(self, is_connect: bool, is_no_db_configured: bool, message: str):

@@ -8,7 +8,7 @@ request = requests.Request
 
 def response(status: http_status = http_status.OK,
              message: str = "SUCCESS",
-             data: dict = None,
+             data: dict | list = None,
              meta: dict | str = None,
              for_docs: bool = False):
     map = {

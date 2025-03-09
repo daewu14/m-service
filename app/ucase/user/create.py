@@ -1,6 +1,7 @@
 import json
 
 import app.model.user
+import pkg.helper.hash
 from app.presentation.response_user_created import ResponseUserCreated
 from pkg.logger.log import logger
 from pkg.http import response, http_status
@@ -29,7 +30,7 @@ response_docs = {
             },
         },
         422: {
-            "description": "Bad Request",
+            "description": "Unprocessable Entity",
             "content": {
                 "application/json": {
                     "example": {
@@ -51,6 +52,17 @@ response_docs = {
                 }
             },
         },
+        400: {
+            "description": "Bad Request",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": "BAD_REQUEST",
+                        "message": "Email already exists"
+                    }
+                }
+            },
+        },
     }
 }
 
@@ -63,12 +75,21 @@ async def create(user: RequestCreateUser):
         if user.email is None:
             user.email = ""
 
+        # check email if not empty
+        if user.email != "":
+            check_email = await user_case.user_repository.find_by_email(user.email)
+            if check_email is not None:
+                return response(
+                    status=http_status.BAD_REQUEST,
+                    message="Email already exists"
+                )
+
         generate_uuid = await user_case.user_repository.generate_uuid()
 
         user_model = app.model.user.User(
             name=user.name,
             email=user.email,
-            password=user.password,
+            password=pkg.helper.hash.sha256(user.password),
             uuid=generate_uuid
         )
         result = await user_case.user_repository.create(user_model)
